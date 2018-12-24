@@ -6,16 +6,28 @@ set -e
 case "$1" in
     configure)
 	if [ "@GROUP@" != "root" ]; then
-	    groupadd -f "@GROUP@"
+	    cat /etc/group | cut -d: -f1 | grep "@GROUP@"
+	    if [ "$?" != "0" ]; then
+	        groupadd -f "@GROUP@"
+	    fi
 	fi
 
 	if [ "@USER@" != "root" ]; then
-	    useradd -d "$(dirname @PID_FILE@)" -M -N -G "@GROUP@" "@USER@"
+	    cat /etc/passwd | cut -d: -f1 | grep "@USER@"
+	    if [ "$?" != "0" ]; then
+	        useradd -d "$(dirname @PID_FILE@)" -M -N -G "@GROUP@" "@USER@"
+	    fi
 	fi
 
 	if [ -f "/etc/init.d/centengine" ]; then
 	    update-rc.d centengine defaults
 	fi
+
+	if [ ! -d "/var/log/centreon-engine" ]; then
+            mkdir /var/log/centreon-engine
+            chown centreon-engine:centreon-engine /var/log/centreon-engine
+        fi
+
 	;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
