@@ -62,6 +62,7 @@ if (WITH_PACKAGE_SH
     list(APPEND CPACK_GENERATOR "DEB")
     list(APPEND PACKAGE_LIST "DEB package (.deb)")
     set(CPACK_DEBIAN_PACKAGE_SECTION "net")
+    set(CPACK_DEBIAN_PACKAGE_NAME "centreon-engine")
     configure_file("${SCRIPT_DIR}/deb/postinst.in" "${SCRIPT_DIR}/deb/postinst")
     set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
       "${SCRIPT_DIR}/deb/postinst"
